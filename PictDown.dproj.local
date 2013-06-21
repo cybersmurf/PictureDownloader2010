@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.015,P:\MS3Util\MS3Util.dproj=C:\Users\sud\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.582,P:\MS3Util\fMain.pas=C:\Users\sud\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.540,P:\Gorges\PictureDownloader\PictDown.dproj=P:\Gorges\PictureDownloader\MS3Util.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.582,P:\MS3Util\fMain.dfm=C:\Users\sud\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.904,=C:\Users\sud\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.024,=C:\Users\sud\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
