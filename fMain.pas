@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ExtCtrls, StdCtrls, Buttons, INIFiles, mon2kdbe_TLB, MS3Tools_TLB,FileCtrl,
-  httpsend, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
+  httpsend, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP,
+  DB, ADODB;
 
 type
   TForm1 = class(TForm)
@@ -17,11 +18,17 @@ type
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
     btn1: TButton;
+    con1: TADOConnection;
+    qry1: TADOQuery;
+    ds1: TDataSource;
+    btn2: TButton;
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
+    procedure DownloadToMoney(Sender: TObject);
+    procedure DownloadSpecial;
+    procedure btn2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -66,7 +73,63 @@ begin
   Result := Copy(AUrl, i + 1, Length(AUrl) - (i));
 end;
 
-procedure TForm1.btn1Click(Sender: TObject);
+procedure TForm1.DownloadSpecial;
+var
+  SERVER,USER,PASS,DATABASE : string;
+  PREFIX, IMGSOURCE, IMGDEST : string;
+  picturefs : TFileStream;
+begin
+  SERVER := CfgFile.ReadString('SQL','SERVER','NOT');
+  DATABASE := CfgFile.ReadString('SQL','DATABASE','NOT');
+  USER := CfgFile.ReadString('SQL','USER','NOT');
+  PASS := CfgFile.ReadString('SQL','PASSWORD','');
+  IMGDEST := CfgFile.ReadString('Download','Destination','NOT');
+  PREFIX := CfgFile.ReadString('Download','SourcePrefix','NOT');
+
+  con1.ConnectionString := Format('PROVIDER=SQLOLEDB.1;SERVER=%s;DATABASE=%s;User ID=%s;Password=%s',[SERVER,DATABASE,USER,PASS]);
+
+  try
+    con1.Connected := True;
+  except
+    Memo1.Lines.Add('Nepodaøilo se pøipojit k DB');
+  end;
+
+  if con1.Connected then
+  begin
+    qry1.Connection := con1;
+    qry1.SQL.Text := 'SELECT * FROM dbo.zasoby';
+    qry1.Open;
+
+    while not qry1.Eof do
+    begin
+      Application.ProcessMessages;
+      IMGDEST := CfgFile.ReadString('Download','Destination','NOT');
+      if not DirectoryExists(IMGDEST+qry1.FieldByName('ID').AsString) then
+      begin
+        CreateDir(IMGDEST+'\'+qry1.FieldByName('ID').AsString);
+      end;
+
+      IMGSOURCE := PREFIX+ExtractUrlFileName(qry1.FieldByName('IMGURL').AsString);
+      IMGDEST := (IMGDEST+qry1.FieldByName('ID').AsString) + '\' + ExtractUrlFileName(IMGSOURCE);
+
+      picturefs := TFileStream.Create(IMGDEST, fmCreate or fmOpenWrite);
+
+      if HttpGetBinary(IMGSOURCE,picturefs) then
+        begin
+          picturefs.free;
+          Memo1.Lines.Add('Stáhl jsem obrázek ' + IMGSOURCE);
+        end
+        else
+        WriteLog(2,'Nepovedlo se stáhnout obrázek '+IMGSOURCE);
+      Sleep(200);
+      qry1.Next;
+    end;
+
+  end;
+
+end;
+
+procedure TForm1.DownloadToMoney(Sender: TObject);
 var
   tSkSezZas : TBFTable;
   pictname, mpictname : string;
@@ -186,6 +249,11 @@ begin
 
 end;
 
+
+procedure TForm1.btn2Click(Sender: TObject);
+begin
+  DownloadSpecial;
+end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin

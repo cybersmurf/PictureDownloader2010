@@ -21,7 +21,7 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object SpeedButton1: TSpeedButton
-    Left = 376
+    Left = 231
     Top = 329
     Width = 23
     Height = 22
@@ -29,7 +29,7 @@ object Form1: TForm1
     OnClick = SpeedButton1Click
   end
   object SpeedButton2: TSpeedButton
-    Left = 376
+    Left = 231
     Top = 377
     Width = 23
     Height = 22
@@ -55,7 +55,7 @@ object Form1: TForm1
   object MoneyPath: TLabeledEdit
     Left = 8
     Top = 330
-    Width = 369
+    Width = 225
     Height = 21
     Anchors = [akLeft, akBottom]
     EditLabel.Width = 76
@@ -66,7 +66,7 @@ object Form1: TForm1
   object ePicturePath: TLabeledEdit
     Left = 8
     Top = 378
-    Width = 369
+    Width = 225
     Height = 21
     Anchors = [akLeft, akBottom]
     EditLabel.Width = 98
@@ -90,9 +90,9 @@ object Form1: TForm1
   end
   object Button3: TButton
     Left = 425
-    Top = 376
+    Top = 366
     Width = 156
-    Height = 25
+    Height = 35
     Caption = 'KONEC'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -110,6 +110,27 @@ object Form1: TForm1
     Height = 38
     Caption = 'St'#225'hni obr'#225'zky'
     TabOrder = 5
-    OnClick = btn1Click
+  end
+  object btn2: TButton
+    Left = 272
+    Top = 322
+    Width = 147
+    Height = 38
+    Caption = 'Download Special'
+    TabOrder = 6
+    OnClick = btn2Click
+  end
+  object con1: TADOConnection
+    Left = 392
+    Top = 256
+  end
+  object qry1: TADOQuery
+    Parameters = <>
+    Left = 448
+    Top = 256
+  end
+  object ds1: TDataSource
+    Left = 504
+    Top = 256
   end
 end
